@@ -1,0 +1,16 @@
+name: music_deconvolution
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10
+  - scanpy
+  - pandas
+  - scipy
+  - r-base=4.2
+  - r-optparse
+  - r-remotes
+  - bioconductor-singlecellexperiment
+  - bioconductor-s4vectors
+  - bioconductor-biobase
+  - bioconductor-toast
