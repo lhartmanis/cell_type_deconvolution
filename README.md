@@ -38,8 +38,6 @@ music-cell-type-deconvolution/
 ├── environment.yml
 ├── LICENSE
 ├── .gitignore
-├── examples/
-│   └── run_sl_clinseq_bootstrap.sh
 └── scripts/
     ├── 01_create_bmmap_h5ad.py
     ├── 02_export_bmmap_h5ad_to_music_mtx.py
