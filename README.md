@@ -78,8 +78,6 @@ The Python reference-preparation scripts use:
 - `pandas`
 - `scipy`
 
-No `zellkonverter` dependency is required because the final R workflow reads a MatrixMarket reference bundle directly rather than reading `.h5ad` files in R.
-
 ## Input data
 
 ### Bulk RNA-seq counts
@@ -130,7 +128,7 @@ BM_map_ref_meta.tsv        cell metadata, row names matching barcodes
 
 The metadata file must contain the columns used for:
 
-- cell type labels, for example `CellType_collapse`
+- cell type labels, for example `CellType_Broad`
 - donor/sample labels, for example `Donor`
 
 ## Preparing the BoneMarrowMap reference
@@ -154,11 +152,8 @@ By default, the script keeps these metadata columns if present:
 ```text
 CellType_Broad
 CellType
-CellType_collapse
 Donor
 ```
-
-`CellType_collapse` can also be created before this step in a separate metadata-preparation script.
 
 ### 2. Export the AnnData object to a MuSiC-compatible MTX bundle
 
@@ -199,17 +194,15 @@ This verifies that:
 
 ## Running MuSiC
 
-The current workflow calls `run_music.R` directly. `runner.R` is not required.
-
 Example for one bulk RNA-seq batch:
 
 ```bash
 Rscript scripts/run_music.R \
-  -b /path/to/sl_inex_rename.txt.gz \
+  -b /path/to/bulk_counts.txt.gz \
   -p /path/to/BM_map_ref/BM_map_ref \
-  -c CellType_collapse \
+  -c CellType_Broad \
   -d Donor \
-  -o outputs/SL_music_celltypecollapse_hvgmarkers_boot100 \
+  -o outputs/music_celltypeBroad_hvgmarkers_boot100 \
   --gene_mode hvg_markers \
   --n_genes 4000 \
   --bootstrap 100 \
@@ -221,12 +214,6 @@ Rscript scripts/run_music.R \
 ```
 
 The same command can be repeated for separate RNA-seq batches, changing only the bulk count matrix and output prefix.
-
-See:
-
-```text
-examples/run_sl_clinseq_bootstrap.sh
-```
 
 ## Gene selection modes
 
@@ -309,10 +296,6 @@ Checkpoint files are also written next to the output RDS while bootstrapping:
 <output>_done_idx.rds
 <output>_progress.log
 ```
-
-## Methods summary
-
-Cell type proportions in AML bulk RNA-seq samples were estimated using MuSiC, a reference-based deconvolution method. Analyses were performed separately for each RNA-seq batch using raw, unnormalized count matrices. The BoneMarrowMap single-cell reference was prepared locally from a tab-delimited genes-by-cells count matrix and matching cell metadata. The reference matrix was loaded with Scanpy, transposed to AnnData cell-by-gene format, annotated with BoneMarrowMap cell type labels and donor information, and exported to a MuSiC-compatible MatrixMarket bundle. The R pipeline reconstructed a `SingleCellExperiment` object from this bundle, intersected genes between the bulk and single-cell datasets, selected highly variable and marker-like genes, and ran MuSiC using the collapsed BoneMarrowMap cell type labels and donor IDs. Robustness was assessed using bootstrap gene subsampling.
 
 ## References
 
